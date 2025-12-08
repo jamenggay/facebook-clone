@@ -14,9 +14,9 @@ class NewsfeedCard extends StatelessWidget {
   final int commentsCount;
   final int sharesCount;
   final String userImage;
-  final String? imagePath; // optional post image
+  final String? imagePath; 
   final bool
-  showPlaceholder; // whether to show placeholder when imagePath is null
+  showPlaceholder; 
 
   const NewsfeedCard({
     super.key,
@@ -57,6 +57,7 @@ class NewsfeedCard extends StatelessWidget {
     }
 
     return Card(
+      color: FB_TEXT_COLOR_WHITE,
       margin: EdgeInsets.all(ScreenUtil().setSp(10)),
       child: Padding(
         padding: EdgeInsetsGeometry.all(ScreenUtil().setSp(10)),
@@ -77,7 +78,7 @@ class NewsfeedCard extends StatelessWidget {
                     CustomFont(
                       text: userName,
                       fontSize: ScreenUtil().setSp(15),
-                      color: Colors.black,
+                      color: FB_DARK_PRIMARY,
                       fontWeight: FontWeight.bold,
                     ),
                     Row(
@@ -108,7 +109,7 @@ class NewsfeedCard extends StatelessWidget {
             CustomFont(
               text: postContent,
               fontSize: ScreenUtil().setSp(12),
-              color: Colors.black,
+              color: FB_DARK_PRIMARY,
             ),
             SizedBox(height: ScreenUtil().setHeight(5)),
             (imagePath != null)

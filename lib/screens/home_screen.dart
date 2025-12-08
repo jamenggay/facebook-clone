@@ -21,13 +21,15 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<String> titles = ['Chatterly', 'Notifications'];
 
     return Scaffold(
+      backgroundColor: FB_TEXT_COLOR_WHITE,
       appBar: AppBar(
+        backgroundColor: FB_LIGHT_PRIMARY,
         shadowColor: FB_TEXT_COLOR_WHITE,
         elevation: 2,
         title: CustomFont(
           text: titles[_selectedIndex],
           fontSize: ScreenUtil().setSp(25),
-          color: FB_PRIMARY,
+          color: FB_TEXT_COLOR_WHITE,
           fontFamily: 'Klavika',
         ),
       ),
@@ -41,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: FB_LIGHT_PRIMARY,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         onTap: _onTappedBar,
@@ -53,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
         ],
-        selectedItemColor: FB_PRIMARY,
+        selectedItemColor: FB_TEXT_COLOR_WHITE,
         currentIndex: _selectedIndex,
       ),
     );
