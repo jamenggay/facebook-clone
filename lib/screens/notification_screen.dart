@@ -34,6 +34,20 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
           Divider(),
           notif.Notification_Tile(
+            name: 'Raniel Ryan Necio',
+            description: 'reacted to a photo you shared: "🥳🥳🥳".',
+            time: '15h',
+            notifProfile: 'assets/images/notif8.jpg',
+          ),
+          Divider(),
+          notif.Notification_Tile(
+            name: 'BARKGAGI: ',
+            description: '"ganto lang yan eh, if di niyo kayang pilitin yang admin niyong hindi aware sa struggles ng..."',
+            time: '11h',
+            notifProfile: 'assets/images/notif9.jpg',
+          ),
+          Divider(),
+          notif.Notification_Tile(
             name: 'Ronald Rafael Sena',
             description: " reacted to a photo you shared.",
             time: '1d',

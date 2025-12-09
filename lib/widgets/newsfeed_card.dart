@@ -10,7 +10,7 @@ class NewsfeedCard extends StatelessWidget {
   final String userName;
   final String postContent;
   final DateTime date;
-  final int likesCount;
+  final String likesCount;
   final int commentsCount;
   final int sharesCount;
   final String userImage;
@@ -24,7 +24,7 @@ class NewsfeedCard extends StatelessWidget {
     required this.postContent,
     required this.date,
     required this.userImage,
-    this.likesCount = 0,
+    this.likesCount = "0",
     this.commentsCount = 0,
     this.sharesCount = 0,
     this.imagePath,
