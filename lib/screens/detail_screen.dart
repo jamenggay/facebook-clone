@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tuazon_mobprog/constants.dart';
 import '../widgets/custom_font.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
   final String userName;
   final String postContent;
   final String date;
-  int numOfLikes;
+  final int numOfLikes;
   final String imageUrl;
   final String profileImageUrl;
 
@@ -22,25 +22,65 @@ class DetailScreen extends StatelessWidget {
   });
 
   @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  late int _currentLikes;
+  bool _isLiked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentLikes = widget.numOfLikes;
+  }
+
+  void _toggleLike() {
+    setState(() {
+      if (_isLiked) {
+        _currentLikes = (_currentLikes - 1) < 0 ? 0 : _currentLikes - 1;
+        _isLiked = false;
+      } else {
+        _currentLikes = _currentLikes + 1;
+        _isLiked = true;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: CustomFont(
-          text: userName,
-          fontSize: ScreenUtil().setSp(20),
-          color: Colors.black,
+    // ignore: deprecated_member_use
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, {'likes': _currentLikes, 'isLiked': _isLiked});
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context, {'likes': _currentLikes, 'isLiked': _isLiked});
+            },
+          ),
+          centerTitle: true,
+          title: CustomFont(
+            text: widget.userName,
+            fontSize: ScreenUtil().setSp(20),
+            color: Colors.black,
+          ),
         ),
-      ),
       body: Container(
         color: Colors.white,
         height: ScreenUtil().screenHeight,
         child: SingleChildScrollView(
           child: Column(
             children: [
-              (imageUrl == '')
+              (widget.imageUrl == '')
                   ? SizedBox(height: ScreenUtil().setHeight(0))
-                  : Image.network(imageUrl),
+                  : (widget.imageUrl.startsWith('http'))
+                  ? Image.network(widget.imageUrl)
+                  : Image.asset(widget.imageUrl),
               SizedBox(height: ScreenUtil().setHeight(20)),
               Container(
                 padding: EdgeInsets.symmetric(
@@ -48,18 +88,22 @@ class DetailScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    (profileImageUrl == '')
+                    (widget.profileImageUrl == '')
                         ? const Icon(Icons.person)
                         : CircleAvatar(
                             radius: ScreenUtil().setSp(25),
-                            backgroundImage: NetworkImage(profileImageUrl),
+                            backgroundImage:
+                                (widget.profileImageUrl.startsWith('http'))
+                                ? NetworkImage(widget.profileImageUrl)
+                                : AssetImage(widget.profileImageUrl)
+                                      as ImageProvider,
                           ),
                     SizedBox(width: ScreenUtil().setWidth(10)),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomFont(
-                          text: userName,
+                          text: widget.userName,
                           fontSize: ScreenUtil().setSp(20),
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -69,7 +113,7 @@ class DetailScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             CustomFont(
-                              text: date,
+                              text: widget.date,
                               fontSize: ScreenUtil().setSp(15),
                               color: Colors.grey,
                             ),
@@ -95,7 +139,7 @@ class DetailScreen extends StatelessWidget {
                 ),
                 alignment: Alignment.centerLeft,
                 child: CustomFont(
-                  text: postContent,
+                  text: widget.postContent,
                   fontSize: ScreenUtil().setSp(18),
                   color: Colors.black,
                 ),
@@ -110,16 +154,17 @@ class DetailScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton.icon(
-                      onPressed: () {
-                        print('Liked');
-                      },
-                      icon: const Icon(Icons.thumb_up, color: FB_DARK_PRIMARY),
+                      onPressed: _toggleLike,
+                      icon: Icon(
+                        Icons.thumb_up,
+                        color: _isLiked ? FB_DARK_PRIMARY : FB_TEXT_COLOR_GREY,
+                      ),
                       label: CustomFont(
-                        text: (numOfLikes == 0)
+                        text: (_currentLikes == 0)
                             ? 'Like'
-                            : numOfLikes.toString(),
+                            : _currentLikes.toString(),
                         fontSize: ScreenUtil().setSp(12),
-                        color: FB_DARK_PRIMARY,
+                        color: _isLiked ? FB_DARK_PRIMARY : FB_TEXT_COLOR_GREY,
                       ),
                     ),
                     TextButton.icon(
@@ -146,6 +191,7 @@ class DetailScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
       ),
     );
   }

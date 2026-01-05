@@ -10,7 +10,9 @@ class CustomFont extends StatelessWidget{
     this.fontWeight = FontWeight.normal,
     this.textAlign = TextAlign.left,
     this.letterSpacing = 0,
-    this.fontStyle = FontStyle.normal
+    this.fontStyle = FontStyle.normal,
+    this.maxLines,
+    this.overflow,
     });
   
   final String text;
@@ -20,12 +22,15 @@ class CustomFont extends StatelessWidget{
   final TextAlign textAlign;
   final String fontFamily;
   final FontStyle fontStyle;
+  final int? maxLines;
+  final TextOverflow? overflow;
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Text(
       text,
       textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
       style: TextStyle(
         fontFamily: fontFamily,
         fontSize: fontSize,

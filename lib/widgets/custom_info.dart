@@ -12,6 +12,7 @@ class CustomInformation extends StatelessWidget {
     required this.description,
     this.icon = const Icon(Icons.person),
     this.profileImageUrl = '',
+    this.notifProfile = '',
     this.atProfile = false,
     required this.date,
     this.imageUrl = '',
@@ -27,13 +28,14 @@ class CustomInformation extends StatelessWidget {
   final int numOfLikes;
   final bool atProfile;
   final String imageUrl;
+  final String notifProfile;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(ScreenUtil().setSp(15)),
       child: InkWell(
-        onTap: () {
+         onTap: () {
           (atProfile)
               ? print('')
               : Navigator.push(
@@ -41,57 +43,73 @@ class CustomInformation extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => DetailScreen(
                       userName: name,
-                      postContent: description,
+                      postContent: post,
                       date: date,
                       numOfLikes: numOfLikes,
-                      imageUrl: imageUrl,
+                      imageUrl: imageUrl ,
                       profileImageUrl: profileImageUrl,
                     ),
                   ),
                 );
         },
-        child: Row(
-          children: [
-            (profileImageUrl == '')
-                ? icon
-                : CircleAvatar(
-                    radius: ScreenUtil().setSp(15),
-                    backgroundImage: NetworkImage(profileImageUrl),
-                  ),
-            SizedBox(width: ScreenUtil().setWidth(10)),
-            Column(
+        child:  Row(
+        
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          (notifProfile == '' && profileImageUrl == '')
+              ? icon
+              : CircleAvatar(
+                  radius: 25,
+                  backgroundImage: (notifProfile != '')
+                      ? (notifProfile.startsWith('http')
+                          ? NetworkImage(notifProfile)
+                          : AssetImage(notifProfile) as ImageProvider)
+                      : (profileImageUrl.startsWith('http')
+                          ? NetworkImage(profileImageUrl)
+                          : AssetImage(profileImageUrl) as ImageProvider),
+                ),
+          SizedBox(width: ScreenUtil().setWidth(10)),
+
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomFont(
-                  text: name,
-                  fontSize: ScreenUtil().setSp(20),
-                  color: Colors.black,
-                  fontWeight: FontWeight.w800,
+                RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontSize: ScreenUtil().setSp(16),
+                      color: FB_DARK_PRIMARY,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: "$name ",
+                        style: const TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                      TextSpan(text: description),
+                    ],
+                  ),
                 ),
-                CustomFont(
-                  text: 'Posted; $post',
-                  fontSize: ScreenUtil().setSp(13),
-                  color: Colors.black,
-                ),
-                CustomFont(
-                  text: description,
-                  fontSize: ScreenUtil().setSp(12),
-                  color: Colors.black,
-                  fontStyle: FontStyle.italic,
-                ),
-                SizedBox(height: ScreenUtil().setHeight(5)),
+
+                SizedBox(height: ScreenUtil().setHeight(4)),
+
                 CustomFont(
                   text: date,
-                  fontSize: ScreenUtil().setSp(12),
-                  color: Colors.grey.shade400,
+                  fontSize: ScreenUtil().setSp(14),
+                  color: FB_DARK_PRIMARY,
+                  fontStyle: FontStyle.italic,
                 ),
               ],
             ),
-            const Spacer(),
-            const Icon(Icons.more_horiz),
-          ],
-        ),
+          ),
+
+          SizedBox(width: ScreenUtil().setWidth(10)),
+
+          const Icon(Icons.more_horiz),
+        ],
       ),
-    );
+  
+      ),
+      
+     );
   }
 }
