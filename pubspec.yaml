@@ -20,7 +20,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
-    - assets/images/userprofile.jpeg
+    - assets/images/userprofile.jpg
     - assets/icons/like.png
     - assets/icons/comment.png
     - assets/icons/share.png

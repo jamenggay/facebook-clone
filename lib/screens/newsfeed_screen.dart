@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tuazon_mobprog/widgets/newsfeed_card.dart';
+import 'package:tuazon_mobprog/widgets/post_card.dart';
 
 class NewsfeedScreen extends StatelessWidget {
   const NewsfeedScreen({super.key});
@@ -9,16 +9,16 @@ class NewsfeedScreen extends StatelessWidget {
     //UI
     return ListView(
       children: [
-        NewsfeedCard(
+        PostCard(
           userName: 'Jamaine Tuazon',
           postContent: 'na para bang non-existent and weekend',
           likesCount: "321",
           commentsCount: 12,
           sharesCount: 3,
           date: DateTime.now().subtract(Duration(days: 1)),
-          userImage: 'assets/images/userprofile.jpeg',
+          userImage: 'assets/images/userprofile.jpg',
         ),
-        NewsfeedCard(
+        PostCard(
           userName: 'NU Central Student Government',
           postContent: 'PAGEANT SLUSH PROTEST SLUSH PROWESS!',
           likesCount: "124",
@@ -29,7 +29,7 @@ class NewsfeedScreen extends StatelessWidget {
           date: DateTime.now().subtract(Duration(minutes: 13)),
           userImage: 'assets/images/otherprofile.jpg',
         ),
-        NewsfeedCard(
+        PostCard(
           userName: 'ABS-CBN',
           postContent: 'Rules are made to be followed, guys',
           likesCount: "781",
@@ -39,7 +39,7 @@ class NewsfeedScreen extends StatelessWidget {
           date: DateTime.now().subtract(Duration(hours: 9)),
           userImage: 'assets/images/otherprofile3.jpg',
         ),
-        NewsfeedCard(
+        PostCard(
           userName: 'ABS-CBN',
           postContent: "Ang lala! Hindi na 'yan tama. 😢😢😢",
           likesCount: "5.4K",
@@ -49,7 +49,7 @@ class NewsfeedScreen extends StatelessWidget {
           date: DateTime.now().subtract(Duration(hours: 9)),
           userImage: 'assets/images/otherprofile3.jpg',
         ),
-        NewsfeedCard(
+        PostCard(
           userName: 'AWS Cloud Clubs Philippines',
           postContent: 'Phase 2 emails are finally here! ^^',
           likesCount: "9",

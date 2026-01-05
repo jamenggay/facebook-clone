@@ -6,7 +6,7 @@ import 'package:tuazon_mobprog/widgets/comment_icon.dart';
 import '../constants.dart';
 import 'custom_font.dart';
 
-class NewsfeedCard extends StatelessWidget {
+class PostCard extends StatelessWidget {
   final String userName;
   final String postContent;
   final DateTime date;
@@ -18,7 +18,7 @@ class NewsfeedCard extends StatelessWidget {
   final bool
   showPlaceholder; 
 
-  const NewsfeedCard({
+  const PostCard({
     super.key,
     required this.userName,
     required this.postContent,
@@ -178,7 +178,7 @@ class NewsfeedCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 14,
-                  backgroundImage: AssetImage('assets/images/userprofile.jpeg'),
+                  backgroundImage: AssetImage('assets/images/userprofile.jpg'),
                 ),
                 SizedBox(width: ScreenUtil().setWidth(10)),
                 Container(

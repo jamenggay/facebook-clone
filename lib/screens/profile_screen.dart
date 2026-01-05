@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tuazon_mobprog/constants.dart';
 import 'package:tuazon_mobprog/widgets/custom_buttom.dart';
 import 'package:tuazon_mobprog/widgets/custom_font.dart';
+import 'package:tuazon_mobprog/widgets/post_card.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -30,7 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: BoxDecoration(
                       color: Colors.grey[300],
                       image: const DecorationImage(
-                        image: NetworkImage(''),
+                        image: AssetImage('assets/images/coverphoto.jpg'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -43,7 +44,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         const CircleAvatar(
                           radius: 50,
-                          backgroundImage: NetworkImage(''),
+                          backgroundImage: AssetImage(
+                            'assets/images/userprofile.jpg',
+                          ),
                         ),
                         Positioned(
                           bottom: 0,
@@ -72,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomFont(
-                      text: 'Jamaine Grace Tuazon',
+                      text: 'Jamaine Tuazon',
                       fontWeight: FontWeight.bold,
                       fontSize: ScreenUtil().setSp(20),
                       color: Colors.black,
@@ -81,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Row(
                       children: [
                         CustomFont(
-                          text: '1M',
+                          text: '248',
                           fontSize: ScreenUtil().setSp(15),
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -101,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         SizedBox(width: ScreenUtil().setWidth(5)),
                         CustomFont(
-                          text: '1',
+                          text: '486',
                           fontSize: ScreenUtil().setSp(15),
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -119,7 +122,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Row(
                       children: [
                         CustomButton(
-                          buttonName: 'Message',
+                          buttonName: 'Edit Profile',
+                          onPressed: () {},
+                          buttonType: 'outlined',
+                        ),
+                        SizedBox(width: ScreenUtil().setWidth(10)),
+                        CustomButton(
+                          buttonName: 'Share Profile',
                           onPressed: () {},
                           buttonType: 'outlined',
                         ),
@@ -159,9 +168,228 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: ScreenUtil().setHeight(2000),
                 child: TabBarView(
                   children: [
-                    Text("Post Section"),
-                    Text("About Section"),
-                    Text("Photos Section"),
+                    Column(
+                      children: [
+                        PostCard(
+                          userName: 'Jamaine Tuazon',
+                          postContent: 'CCIT Domination at ISPE Games 2025!',
+                          likesCount: "19",
+                          commentsCount: 4,
+                          sharesCount: 9,
+                          imagePath: 'assets/images/wallpost1.jpg',
+                          showPlaceholder: false,
+                          date: DateTime.now().subtract(Duration(days: 1)),
+                          userImage: 'assets/images/userprofile.jpg',
+                        ),
+                        PostCard(
+                          userName: 'Jamaine Tuazon',
+                          postContent:
+                              'pasensya na sa mga inaanak q, capstone muna',
+                          likesCount: "21",
+                          commentsCount: 2,
+                          sharesCount: 5,
+                          imagePath: 'assets/images/wallpost2.jpg',
+                          showPlaceholder: false,
+                          date: DateTime.now().subtract(Duration(days: 2)),
+                          userImage: 'assets/images/userprofile.jpg',
+                        ),
+                        PostCard(
+                          userName: 'Jamaine Tuazon',
+                          postContent: 'na para bang non-existent and weekend',
+                          likesCount: "321",
+                          commentsCount: 12,
+                          sharesCount: 3,
+                          date: DateTime.now().subtract(Duration(days: 3)),
+                          userImage: 'assets/images/userprofile.jpg',
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(10),
+                            right: ScreenUtil().setWidth(10),
+                            top: ScreenUtil().setWidth(10),
+                            bottom: ScreenUtil().setWidth(20),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: ScreenUtil().setHeight(10)),
+                              Text(
+                                "Description",
+                                style: TextStyle(
+                                  fontSize: ScreenUtil().setSp(20),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                              Text(
+                                "Jamaine Tuazon is a 3rd year BSIT-MWA at National University. She is Aspiring IT professional with interests in systems, security, and application development. Values teamwork, discipline, and continuous improvement while building practical and technical skills.",
+                                style: TextStyle(
+                                  fontSize: ScreenUtil().setSp(17),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: ScreenUtil().setHeight(10)),
+                              Text(
+                                "Details",
+                                style: TextStyle(
+                                  fontSize: ScreenUtil().setSp(20),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                              SizedBox(height: ScreenUtil().setHeight(10)),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.house,
+                                    color: Colors.grey,
+                                    size: ScreenUtil().setSp(17),
+                                  ),
+                                  SizedBox(width: ScreenUtil().setWidth(10)),
+                                  Text(
+                                    "Lives at Caloocan City",
+                                    style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(17),
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.work,
+                                    color: Colors.grey,
+                                    size: ScreenUtil().setSp(17),
+                                  ),
+                                  SizedBox(width: ScreenUtil().setWidth(10)),
+                                  Text(
+                                    "Works at Krusty Crub",
+                                    style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(17),
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.school,
+                                    color: Colors.grey,
+                                    size: ScreenUtil().setSp(17),
+                                  ),
+                                  SizedBox(width: ScreenUtil().setWidth(10)),
+                                  Text(
+                                    "Studies at National University",
+                                    style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(17),
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.favorite,
+                                    color: Colors.grey,
+                                    size: ScreenUtil().setSp(17),
+                                  ),
+                                  SizedBox(width: ScreenUtil().setWidth(10)),
+                                  Text(
+                                    "Single",
+                                    style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(17),
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    GridView.count(
+                      primary: false,
+                      padding: const EdgeInsets.all(10),
+                      crossAxisSpacing: 2,
+                      mainAxisSpacing: 2,
+                      crossAxisCount: 2,
+                      children: <Widget>[
+                        Container(
+                          color: Colors.grey[400],
+                          child: 
+                          Image(
+                            image: AssetImage('assets/images/photos1.jpg'),
+                            fit: BoxFit.cover,),
+                        ),
+                        Container(
+                          color: Colors.grey[400],
+                          child: 
+                          Image(
+                            image: AssetImage('assets/images/photos2.jpg'),
+                            fit: BoxFit.cover,),
+                        ),
+                       Container(
+                          color: Colors.grey[400],
+                          child: 
+                          Image(
+                            image: AssetImage('assets/images/photos3.jpg'),
+                            fit: BoxFit.cover,),
+                        ),
+                        Container(
+                          color: Colors.grey[400],
+                          child: 
+                          Image(
+                            image: AssetImage('assets/images/photos4.jpg'),
+                            fit: BoxFit.cover,),
+                        ),
+                        Container(
+                          color: Colors.grey[400],
+                          child: 
+                          Image(
+                            image: AssetImage('assets/images/photos5.jpg'),
+                            fit: BoxFit.cover,),
+                        ),
+                        Container(
+                          color: Colors.grey[400],
+                          child: 
+                          Image(
+                            image: AssetImage('assets/images/photos6.jpg'),
+                            fit: BoxFit.cover,),
+                        ),
+                        Container(
+                          color: Colors.grey[400],
+                          child: 
+                          Image(
+                            image: AssetImage('assets/images/photos7.jpg'),
+                            fit: BoxFit.cover,),
+                        ),
+                        Container(
+                          color: Colors.grey[400],
+                          child: 
+                          Image(
+                            image: AssetImage('assets/images/coverphoto.jpg'),
+                            fit: BoxFit.cover,),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

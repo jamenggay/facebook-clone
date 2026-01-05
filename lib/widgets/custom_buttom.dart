@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tuazon_mobprog/widgets/custom_font.dart';
 
+// ignore: must_be_immutable
 class CustomButton extends StatefulWidget {
   late String buttonType, buttonName;
   late Color fontColor, outlineColor;
@@ -28,7 +29,7 @@ class _CustomButtonState extends State<CustomButton> {
         onPressed: widget.onPressed,
         style: OutlinedButton.styleFrom(
           padding: EdgeInsets.symmetric(
-            horizontal: ScreenUtil().setWidth(30),
+            horizontal: ScreenUtil().setWidth(30),  
             vertical: ScreenUtil().setHeight(10),
           ),
           shape: RoundedRectangleBorder(

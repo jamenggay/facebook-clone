@@ -4,6 +4,7 @@ import 'package:tuazon_mobprog/constants.dart';
 import 'package:tuazon_mobprog/screens/newsfeed_screen.dart';
 import 'package:tuazon_mobprog/screens/notification_screen.dart';
 import 'package:tuazon_mobprog/widgets/custom_font.dart';
+import 'package:tuazon_mobprog/screens/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> titles = ['Chatterly', 'Notifications'];
+    final List<String> titles = ['Chatterly', 'Notifications', 'Jamaine Tuazon'];
 
     return Scaffold(
       backgroundColor: FB_TEXT_COLOR_WHITE,
@@ -35,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: PageView(
         controller: _pageController,
-        children: const <Widget>[NewsfeedScreen(), NotificationScreen()],
+        children: const <Widget>[NewsfeedScreen(), NotificationScreen(), ProfileScreen()],
         onPageChanged: (page) {
           setState(() {
             _selectedIndex = page;
