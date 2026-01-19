@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../screens/newsfeed_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/notification_screen.dart';
+import '../screens/login_screen.dart';
+import '../screens/register_screen.dart';
 
-void main()=> runApp(const TuazonFacebook());
+void main() => runApp(const TuazonFacebook());
 
 class TuazonFacebook extends StatelessWidget {
   const TuazonFacebook({super.key});
@@ -20,8 +22,10 @@ class TuazonFacebook extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Facebook Replication',
-          initialRoute: '/home',
+          initialRoute: '/login',
           routes: {
+            '/login': (context) => const LoginScreen(),
+            '/register': (context) => const RegisterScreen(),
             '/newsfeed': (context) => const NewsfeedScreen(),
             '/home': (context) => const HomeScreen(),
             '/notification': (context) => NotificationScreen(),

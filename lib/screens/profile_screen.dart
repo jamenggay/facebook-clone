@@ -4,6 +4,7 @@ import 'package:tuazon_mobprog/constants.dart';
 import 'package:tuazon_mobprog/widgets/custom_buttom.dart';
 import 'package:tuazon_mobprog/widgets/custom_font.dart';
 import 'package:tuazon_mobprog/widgets/post_card.dart';
+import 'package:tuazon_mobprog/services/user_database.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,6 +14,41 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final UserDatabase _userDatabase = UserDatabase();
+  String _userName = 'Jamaine Tuazon'; // Default name
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      // Get the logged-in username from database file
+      final username = await _userDatabase.getCurrentUser();
+
+      if (username != null && username.isNotEmpty) {
+        // Fetch user data from database
+        final user = await _userDatabase.findUserByUsername(username);
+
+        if (user != null && mounted) {
+          final firstName = user['firstName']?.toString() ?? '';
+          final lastName = user['lastName']?.toString() ?? '';
+          final fullName = '$firstName $lastName'.trim();
+
+          if (fullName.isNotEmpty && mounted) {
+            setState(() {
+              _userName = fullName;
+            });
+          }
+        }
+      }
+    } catch (e) {
+      // If error occurs, keep default name
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -75,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomFont(
-                      text: 'Jamaine Tuazon',
+                      text: _userName,
                       fontWeight: FontWeight.bold,
                       fontSize: ScreenUtil().setSp(20),
                       color: Colors.black,
@@ -171,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Column(
                       children: [
                         PostCard(
-                          userName: 'Jamaine Tuazon',
+                          userName: _userName,
                           postContent: 'CCIT Domination at ISPE Games 2025!',
                           likesCount: "19",
                           commentsCount: 4,
@@ -182,7 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           userImage: 'assets/images/userprofile.jpg',
                         ),
                         PostCard(
-                          userName: 'Jamaine Tuazon',
+                          userName: _userName,
                           postContent:
                               'pasensya na sa mga inaanak q, capstone muna',
                           likesCount: "21",
@@ -194,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           userImage: 'assets/images/userprofile.jpg',
                         ),
                         PostCard(
-                          userName: 'Jamaine Tuazon',
+                          userName: _userName,
                           postContent: 'na para bang non-existent and weekend',
                           likesCount: "321",
                           commentsCount: 12,
@@ -227,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 textAlign: TextAlign.start,
                               ),
                               Text(
-                                "Jamaine Tuazon is a 3rd year BSIT-MWA at National University. She is Aspiring IT professional with interests in systems, security, and application development. Values teamwork, discipline, and continuous improvement while building practical and technical skills.",
+                                "is a 3rd year BSIT-MWA at National University. She is Aspiring IT professional with interests in systems, security, and application development. Values teamwork, discipline, and continuous improvement while building practical and technical skills.",
                                 style: TextStyle(
                                   fontSize: ScreenUtil().setSp(17),
                                 ),
@@ -334,59 +370,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: <Widget>[
                         Container(
                           color: Colors.grey[400],
-                          child: 
-                          Image(
+                          child: Image(
                             image: AssetImage('assets/images/photos1.jpg'),
-                            fit: BoxFit.cover,),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         Container(
                           color: Colors.grey[400],
-                          child: 
-                          Image(
+                          child: Image(
                             image: AssetImage('assets/images/photos2.jpg'),
-                            fit: BoxFit.cover,),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                       Container(
+                        Container(
                           color: Colors.grey[400],
-                          child: 
-                          Image(
+                          child: Image(
                             image: AssetImage('assets/images/photos3.jpg'),
-                            fit: BoxFit.cover,),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         Container(
                           color: Colors.grey[400],
-                          child: 
-                          Image(
+                          child: Image(
                             image: AssetImage('assets/images/photos4.jpg'),
-                            fit: BoxFit.cover,),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         Container(
                           color: Colors.grey[400],
-                          child: 
-                          Image(
+                          child: Image(
                             image: AssetImage('assets/images/photos5.jpg'),
-                            fit: BoxFit.cover,),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         Container(
                           color: Colors.grey[400],
-                          child: 
-                          Image(
+                          child: Image(
                             image: AssetImage('assets/images/photos6.jpg'),
-                            fit: BoxFit.cover,),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         Container(
                           color: Colors.grey[400],
-                          child: 
-                          Image(
+                          child: Image(
                             image: AssetImage('assets/images/photos7.jpg'),
-                            fit: BoxFit.cover,),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         Container(
                           color: Colors.grey[400],
-                          child: 
-                          Image(
+                          child: Image(
                             image: AssetImage('assets/images/coverphoto.jpg'),
-                            fit: BoxFit.cover,),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ],
                     ),

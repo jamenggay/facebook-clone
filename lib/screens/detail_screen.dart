@@ -11,7 +11,7 @@ class DetailScreen extends StatefulWidget {
   final String imageUrl;
   final String profileImageUrl;
 
-  DetailScreen({
+  const DetailScreen({
     super.key,
     required this.userName,
     required this.postContent,
