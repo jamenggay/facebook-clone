@@ -5,6 +5,7 @@ import 'package:tuazon_mobprog/widgets/custom_buttom.dart';
 import 'package:tuazon_mobprog/widgets/custom_font.dart';
 import 'package:tuazon_mobprog/widgets/post_card.dart';
 import 'package:tuazon_mobprog/services/user_database.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -16,6 +17,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final UserDatabase _userDatabase = UserDatabase();
   String _userName = 'Jamaine Tuazon'; // Default name
+  String _coverImage = 'assets/images/coverphoto.jpg';
+  String _profileImage = 'assets/images/userprofile.jpg';
 
   @override
   void initState() {
@@ -63,14 +66,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 clipBehavior: Clip.none,
                 children: [
                   Container(
+                    width: double.infinity,
                     height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/coverphoto.jpg'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    decoration: BoxDecoration(color: Colors.grey[300]),
+                    child: _coverImage.startsWith('http')
+                        ? CachedNetworkImage(
+                            imageUrl: _coverImage,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Container(
+                              width: double.infinity,
+                              color: Colors.grey[300],
+                              child: Center(child: CircularProgressIndicator()),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              width: double.infinity,
+                              color: Colors.grey[300],
+                              child: Icon(Icons.error),
+                            ),
+                          )
+                        : Image.asset(
+                            _coverImage,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                   Positioned(
                     bottom: -50,
@@ -78,11 +97,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        const CircleAvatar(
+                        CircleAvatar(
                           radius: 50,
-                          backgroundImage: AssetImage(
-                            'assets/images/userprofile.jpg',
-                          ),
+                          backgroundImage: _profileImage.startsWith('http')
+                              ? CachedNetworkImageProvider(_profileImage)
+                              : AssetImage(_profileImage) as ImageProvider,
                         ),
                         Positioned(
                           bottom: 0,
@@ -368,62 +387,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       mainAxisSpacing: 2,
                       crossAxisCount: 2,
                       children: <Widget>[
-                        Container(
-                          color: Colors.grey[400],
-                          child: Image(
-                            image: AssetImage('assets/images/photos1.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Container(
-                          color: Colors.grey[400],
-                          child: Image(
-                            image: AssetImage('assets/images/photos2.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Container(
-                          color: Colors.grey[400],
-                          child: Image(
-                            image: AssetImage('assets/images/photos3.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Container(
-                          color: Colors.grey[400],
-                          child: Image(
-                            image: AssetImage('assets/images/photos4.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Container(
-                          color: Colors.grey[400],
-                          child: Image(
-                            image: AssetImage('assets/images/photos5.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Container(
-                          color: Colors.grey[400],
-                          child: Image(
-                            image: AssetImage('assets/images/photos6.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Container(
-                          color: Colors.grey[400],
-                          child: Image(
-                            image: AssetImage('assets/images/photos7.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Container(
-                          color: Colors.grey[400],
-                          child: Image(
-                            image: AssetImage('assets/images/coverphoto.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                        _buildPhotoItem('assets/images/photos1.jpg'),
+                        _buildPhotoItem('assets/images/photos2.jpg'),
+                        _buildPhotoItem('assets/images/photos3.jpg'),
+                        _buildPhotoItem('assets/images/photos4.jpg'),
+                        _buildPhotoItem('assets/images/photos5.jpg'),
+                        _buildPhotoItem('assets/images/photos6.jpg'),
+                        _buildPhotoItem('assets/images/photos7.jpg'),
+                        _buildPhotoItem('assets/images/coverphoto.jpg'),
                       ],
                     ),
                   ],
@@ -433,6 +404,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPhotoItem(String imagePath) {
+    return Container(
+      color: Colors.grey[400],
+      child: imagePath.startsWith('http')
+          ? CachedNetworkImage(
+              imageUrl: imagePath,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                color: Colors.grey[400],
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              errorWidget: (context, url, error) =>
+                  Container(color: Colors.grey[400], child: Icon(Icons.error)),
+            )
+          : Image(image: AssetImage(imagePath), fit: BoxFit.cover),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tuazon_mobprog/constants.dart';
 import '../widgets/custom_font.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class DetailScreen extends StatefulWidget {
   final String userName;
@@ -60,7 +61,10 @@ class _DetailScreenState extends State<DetailScreen> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context, {'likes': _currentLikes, 'isLiked': _isLiked});
+              Navigator.pop(context, {
+                'likes': _currentLikes,
+                'isLiked': _isLiked,
+              });
             },
           ),
           centerTitle: true,
@@ -70,128 +74,145 @@ class _DetailScreenState extends State<DetailScreen> {
             color: Colors.black,
           ),
         ),
-      body: Container(
-        color: Colors.white,
-        height: ScreenUtil().screenHeight,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              (widget.imageUrl == '')
-                  ? SizedBox(height: ScreenUtil().setHeight(0))
-                  : (widget.imageUrl.startsWith('http'))
-                  ? Image.network(widget.imageUrl)
-                  : Image.asset(widget.imageUrl),
-              SizedBox(height: ScreenUtil().setHeight(20)),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ScreenUtil().setWidth(20),
-                ),
-                child: Row(
-                  children: [
-                    (widget.profileImageUrl == '')
-                        ? const Icon(Icons.person)
-                        : CircleAvatar(
-                            radius: ScreenUtil().setSp(25),
-                            backgroundImage:
-                                (widget.profileImageUrl.startsWith('http'))
-                                ? NetworkImage(widget.profileImageUrl)
-                                : AssetImage(widget.profileImageUrl)
-                                      as ImageProvider,
+        body: Container(
+          color: Colors.white,
+          height: ScreenUtil().screenHeight,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                (widget.imageUrl == '')
+                    ? SizedBox(height: ScreenUtil().setHeight(0))
+                    : (widget.imageUrl.startsWith('http'))
+                    ? CachedNetworkImage(
+                        imageUrl: widget.imageUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          color: Colors.grey[300],
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.grey[300],
+                          child: Icon(Icons.error),
+                        ),
+                      )
+                    : Image.asset(widget.imageUrl),
+                SizedBox(height: ScreenUtil().setHeight(20)),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ScreenUtil().setWidth(20),
+                  ),
+                  child: Row(
+                    children: [
+                      (widget.profileImageUrl == '')
+                          ? const Icon(Icons.person)
+                          : CircleAvatar(
+                              radius: ScreenUtil().setSp(25),
+                              backgroundImage:
+                                  (widget.profileImageUrl.startsWith('http'))
+                                  ? CachedNetworkImageProvider(
+                                      widget.profileImageUrl,
+                                    )
+                                  : AssetImage(widget.profileImageUrl)
+                                        as ImageProvider,
+                            ),
+                      SizedBox(width: ScreenUtil().setWidth(10)),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomFont(
+                            text: widget.userName,
+                            fontSize: ScreenUtil().setSp(20),
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
                           ),
-                    SizedBox(width: ScreenUtil().setWidth(10)),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomFont(
-                          text: widget.userName,
-                          fontSize: ScreenUtil().setSp(20),
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CustomFont(
+                                text: widget.date,
+                                fontSize: ScreenUtil().setSp(15),
+                                color: Colors.grey,
+                              ),
+                              SizedBox(width: ScreenUtil().setWidth(3)),
+                              Icon(
+                                Icons.public,
+                                color: Colors.grey,
+                                size: ScreenUtil().setSp(18),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Icon(Icons.more_horiz),
+                    ],
+                  ),
+                ),
+                SizedBox(height: ScreenUtil().setHeight(15)),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ScreenUtil().setWidth(10),
+                  ),
+                  alignment: Alignment.centerLeft,
+                  child: CustomFont(
+                    text: widget.postContent,
+                    fontSize: ScreenUtil().setSp(18),
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: ScreenUtil().setHeight(30)),
+                Divider(),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ScreenUtil().setWidth(20),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton.icon(
+                        onPressed: _toggleLike,
+                        icon: Icon(
+                          Icons.thumb_up,
+                          color: _isLiked
+                              ? FB_DARK_PRIMARY
+                              : FB_TEXT_COLOR_GREY,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            CustomFont(
-                              text: widget.date,
-                              fontSize: ScreenUtil().setSp(15),
-                              color: Colors.grey,
-                            ),
-                            SizedBox(width: ScreenUtil().setWidth(3)),
-                            Icon(
-                              Icons.public,
-                              color: Colors.grey,
-                              size: ScreenUtil().setSp(18),
-                            ),
-                          ],
+                        label: CustomFont(
+                          text: (_currentLikes == 0)
+                              ? 'Like'
+                              : _currentLikes.toString(),
+                          fontSize: ScreenUtil().setSp(12),
+                          color: _isLiked
+                              ? FB_DARK_PRIMARY
+                              : FB_TEXT_COLOR_GREY,
                         ),
-                      ],
-                    ),
-                    Spacer(),
-                    Icon(Icons.more_horiz),
-                  ],
-                ),
-              ),
-              SizedBox(height: ScreenUtil().setHeight(15)),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ScreenUtil().setWidth(10),
-                ),
-                alignment: Alignment.centerLeft,
-                child: CustomFont(
-                  text: widget.postContent,
-                  fontSize: ScreenUtil().setSp(18),
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(height: ScreenUtil().setHeight(30)),
-              Divider(),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ScreenUtil().setWidth(20),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton.icon(
-                      onPressed: _toggleLike,
-                      icon: Icon(
-                        Icons.thumb_up,
-                        color: _isLiked ? FB_DARK_PRIMARY : FB_TEXT_COLOR_GREY,
                       ),
-                      label: CustomFont(
-                        text: (_currentLikes == 0)
-                            ? 'Like'
-                            : _currentLikes.toString(),
-                        fontSize: ScreenUtil().setSp(12),
-                        color: _isLiked ? FB_DARK_PRIMARY : FB_TEXT_COLOR_GREY,
+                      TextButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.comment, color: FB_DARK_PRIMARY),
+                        label: CustomFont(
+                          text: 'Comment',
+                          fontSize: ScreenUtil().setSp(12),
+                          color: FB_DARK_PRIMARY,
+                        ),
                       ),
-                    ),
-                    TextButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.comment, color: FB_DARK_PRIMARY),
-                      label: CustomFont(
-                        text: 'Comment',
-                        fontSize: ScreenUtil().setSp(12),
-                        color: FB_DARK_PRIMARY,
+                      TextButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.redo, color: FB_DARK_PRIMARY),
+                        label: CustomFont(
+                          text: 'Share',
+                          fontSize: ScreenUtil().setSp(12),
+                          color: FB_DARK_PRIMARY,
+                        ),
                       ),
-                    ),
-                    TextButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.redo, color: FB_DARK_PRIMARY),
-                      label: CustomFont(
-                        text: 'Share',
-                        fontSize: ScreenUtil().setSp(12),
-                        color: FB_DARK_PRIMARY,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }

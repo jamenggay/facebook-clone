@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tuazon_mobprog/constants.dart';
 import 'package:tuazon_mobprog/screens/detail_screen.dart';
 import 'package:tuazon_mobprog/widgets/custom_font.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CustomInformation extends StatelessWidget {
   const CustomInformation({
@@ -35,7 +36,7 @@ class CustomInformation extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ScreenUtil().setSp(15)),
       child: InkWell(
-         onTap: () {
+        onTap: () {
           (atProfile)
               ? print('')
               : Navigator.push(
@@ -46,70 +47,67 @@ class CustomInformation extends StatelessWidget {
                       postContent: post,
                       date: date,
                       numOfLikes: numOfLikes,
-                      imageUrl: imageUrl ,
+                      imageUrl: imageUrl,
                       profileImageUrl: profileImageUrl,
                     ),
                   ),
                 );
         },
-        child:  Row(
-        
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          (notifProfile == '' && profileImageUrl == '')
-              ? icon
-              : CircleAvatar(
-                  radius: 25,
-                  backgroundImage: (notifProfile != '')
-                      ? (notifProfile.startsWith('http')
-                          ? NetworkImage(notifProfile)
-                          : AssetImage(notifProfile) as ImageProvider)
-                      : (profileImageUrl.startsWith('http')
-                          ? NetworkImage(profileImageUrl)
-                          : AssetImage(profileImageUrl) as ImageProvider),
-                ),
-          SizedBox(width: ScreenUtil().setWidth(10)),
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RichText(
-                  text: TextSpan(
-                    style: TextStyle(
-                      fontSize: ScreenUtil().setSp(16),
-                      color: FB_DARK_PRIMARY,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "$name ",
-                        style: const TextStyle(fontWeight: FontWeight.w800),
-                      ),
-                      TextSpan(text: description),
-                    ],
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            (notifProfile == '' && profileImageUrl == '')
+                ? icon
+                : CircleAvatar(
+                    radius: 25,
+                    backgroundImage: (notifProfile != '')
+                        ? (notifProfile.startsWith('http')
+                              ? CachedNetworkImageProvider(notifProfile)
+                              : AssetImage(notifProfile) as ImageProvider)
+                        : (profileImageUrl.startsWith('http')
+                              ? CachedNetworkImageProvider(profileImageUrl)
+                              : AssetImage(profileImageUrl) as ImageProvider),
                   ),
-                ),
+            SizedBox(width: ScreenUtil().setWidth(10)),
 
-                SizedBox(height: ScreenUtil().setHeight(4)),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: ScreenUtil().setSp(16),
+                        color: FB_DARK_PRIMARY,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: "$name ",
+                          style: const TextStyle(fontWeight: FontWeight.w800),
+                        ),
+                        TextSpan(text: description),
+                      ],
+                    ),
+                  ),
 
-                CustomFont(
-                  text: date,
-                  fontSize: ScreenUtil().setSp(14),
-                  color: FB_DARK_PRIMARY,
-                  fontStyle: FontStyle.italic,
-                ),
-              ],
+                  SizedBox(height: ScreenUtil().setHeight(4)),
+
+                  CustomFont(
+                    text: date,
+                    fontSize: ScreenUtil().setSp(14),
+                    color: FB_DARK_PRIMARY,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          SizedBox(width: ScreenUtil().setWidth(10)),
+            SizedBox(width: ScreenUtil().setWidth(10)),
 
-          const Icon(Icons.more_horiz),
-        ],
+            const Icon(Icons.more_horiz),
+          ],
+        ),
       ),
-  
-      ),
-      
-     );
+    );
   }
 }
