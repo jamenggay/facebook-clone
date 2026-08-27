@@ -274,7 +274,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: FB_TEXT_COLOR_WHITE,
+      backgroundColor: FB_SURFACE,
       body: SingleChildScrollView(
         child: Container(
           height: ScreenUtil().screenHeight,
@@ -288,13 +288,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             children: [
               SizedBox(height: ScreenUtil().setHeight(25)),
-              CustomFont(
-                text: 'Register Here',
-                fontSize: ScreenUtil().setSp(50),
-                fontWeight: FontWeight.bold,
-                color: FB_DARK_PRIMARY,
+              Image.asset(
+                        'assets/images/chatbubble.png',
+                        height: ScreenUtil().setHeight(125),
+                      ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Register',
+                  style: TextStyle(
+                    color: FB_DARK_PRIMARY,
+                    fontSize: ScreenUtil().setSp(28),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-              SizedBox(height: ScreenUtil().setHeight(25)),
+              SizedBox(height: ScreenUtil().setHeight(10)),
               CustomTextFormField(
                 height: ScreenUtil().setHeight(10),
                 width: ScreenUtil().setWidth(10),
@@ -374,7 +383,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Text(
                 '(Password should be at least 8 characters, a mixture of letter and numbers consisting of at least one special character with Uppercase and Lowercase letters.)',
                 style: TextStyle(
-                  color: Colors.black45,
+                  color: FB_TEXT_COLOR_GREY,
                   fontSize: ScreenUtil().setSp(10),
                 ),
               ),
@@ -404,14 +413,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
               ),
-              const Spacer(),
+              SizedBox(height: ScreenUtil().setHeight(20)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'You have an account? ',
                     style: TextStyle(
-                      color: Colors.black45,
+                      color: FB_TEXT_COLOR_GREY,
                       fontSize: ScreenUtil().setSp(15),
                     ),
                   ),

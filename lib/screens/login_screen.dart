@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: FB_TEXT_COLOR_WHITE,
+      backgroundColor: FB_SURFACE,
       body: SingleChildScrollView(
         child: SizedBox(
           height: ScreenUtil().screenHeight,
@@ -172,7 +172,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         'assets/images/chatbubble.png',
                         height: ScreenUtil().setHeight(200),
                       ),
-                      SizedBox(height: ScreenUtil().setHeight(30)),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: FB_DARK_PRIMARY,
+                            fontSize: ScreenUtil().setSp(28),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: ScreenUtil().setHeight(10)),
                       CustomTextFormField(
                         height: ScreenUtil().setHeight(10),
                         width: ScreenUtil().setWidth(10),

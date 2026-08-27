@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<String> titles = ['Chatterly', 'Notifications', _userName];
 
     return Scaffold(
-      backgroundColor: FB_TEXT_COLOR_WHITE,
+      backgroundColor: FB_SURFACE,
       appBar: AppBar(
         backgroundColor: FB_LIGHT_PRIMARY,
         shadowColor: FB_TEXT_COLOR_WHITE,
@@ -68,6 +68,14 @@ class _HomeScreenState extends State<HomeScreen> {
           color: FB_TEXT_COLOR_WHITE,
           fontFamily: 'Klavika',
         ),
+        actions: [
+          // Opens the state management demo (ephemeral counter + app-state theme).
+          IconButton(
+            icon: const Icon(Icons.tune, color: FB_TEXT_COLOR_WHITE),
+            tooltip: 'State Demo',
+            onPressed: () => Navigator.pushNamed(context, '/state-demo'),
+          ),
+        ],
       ),
       body: PageView(
         controller: _pageController,

@@ -178,7 +178,7 @@ class _PostCardState extends State<PostCard> {
         }
       },
       child: Card(
-        color: FB_TEXT_COLOR_WHITE,
+        color: FB_CARD,
         margin: EdgeInsets.all(ScreenUtil().setSp(10)),
         child: Padding(
           padding: EdgeInsetsGeometry.all(ScreenUtil().setSp(10)),
@@ -355,12 +355,12 @@ class _PostCardState extends State<PostCard> {
                               CustomFont(
                                 text: 'MORE DETAILS',
                                 fontSize: 17.sp,
-                                color: Colors.black,
+                                color: FB_TEXT_PRIMARY,
                               ),
                               CustomFont(
                                 text: widget.adsMarket,
                                 fontSize: 17.sp,
-                                color: Colors.black,
+                                color: FB_TEXT_PRIMARY,
                                 fontWeight: FontWeight.bold,
                               ),
                             ],

@@ -57,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return DefaultTabController(
       length: 3,
       child: Container(
-        color: Colors.white,
+        color: FB_SURFACE,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,10 +109,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: CircleAvatar(
                             radius: 15,
                             backgroundColor: Colors.grey[300],
-                            child: const Icon(
+                            child: Icon(
                               Icons.camera_alt,
                               size: 16,
-                              color: Colors.black,
+                              color: FB_TEXT_PRIMARY,
                             ),
                           ),
                         ),
@@ -133,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       text: _userName,
                       fontWeight: FontWeight.bold,
                       fontSize: ScreenUtil().setSp(20),
-                      color: Colors.black,
+                      color: FB_TEXT_PRIMARY,
                     ),
                     SizedBox(height: ScreenUtil().setHeight(5)),
                     Row(
@@ -141,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         CustomFont(
                           text: '248',
                           fontSize: ScreenUtil().setSp(15),
-                          color: Colors.black,
+                          color: FB_TEXT_PRIMARY,
                           fontWeight: FontWeight.bold,
                         ),
                         SizedBox(width: ScreenUtil().setWidth(10)),
@@ -161,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         CustomFont(
                           text: '486',
                           fontSize: ScreenUtil().setSp(15),
-                          color: Colors.black,
+                          color: FB_TEXT_PRIMARY,
                           fontWeight: FontWeight.bold,
                         ),
                         SizedBox(width: ScreenUtil().setWidth(10)),
@@ -200,21 +200,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: CustomFont(
                       text: 'Posts',
                       fontSize: ScreenUtil().setSp(15),
-                      color: Colors.black,
+                      color: FB_TEXT_PRIMARY,
                     ),
                   ),
                   Tab(
                     child: CustomFont(
                       text: 'About',
                       fontSize: ScreenUtil().setSp(15),
-                      color: Colors.black,
+                      color: FB_TEXT_PRIMARY,
                     ),
                   ),
                   Tab(
                     child: CustomFont(
                       text: 'Photos',
                       fontSize: ScreenUtil().setSp(15),
-                      color: Colors.black,
+                      color: FB_TEXT_PRIMARY,
                     ),
                   ),
                 ],

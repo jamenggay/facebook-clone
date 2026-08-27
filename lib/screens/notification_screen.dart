@@ -15,7 +15,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: FB_TEXT_COLOR_WHITE,
+      color: FB_SURFACE,
       width: ScreenUtil().screenWidth,
       child: ListView(
         children: const [

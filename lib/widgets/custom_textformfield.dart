@@ -15,7 +15,7 @@ class CustomTextFormField extends StatelessWidget {
     required this.fontColor,
     this.hintTextSize = 12,
     this.hintText = '',
-    this.fillColor = FB_TEXT_COLOR_WHITE,
+    this.fillColor,
     required this.height,
     required this.width,
     this.keyboardType = TextInputType.text,
@@ -74,7 +74,8 @@ class CustomTextFormField extends StatelessWidget {
           fontFamily: 'Frutiger',
         ),
         hintText: hintText,
-        fillColor: fillColor,
+        // Default to the theme-aware card color when no fill color is provided.
+        fillColor: fillColor ?? FB_CARD,
         suffixIcon: suffixIcon,
       ),
     );

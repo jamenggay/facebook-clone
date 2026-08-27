@@ -71,11 +71,11 @@ class _DetailScreenState extends State<DetailScreen> {
           title: CustomFont(
             text: widget.userName,
             fontSize: ScreenUtil().setSp(20),
-            color: Colors.black,
+            color: FB_TEXT_PRIMARY,
           ),
         ),
         body: Container(
-          color: Colors.white,
+          color: FB_SURFACE,
           height: ScreenUtil().screenHeight,
           child: SingleChildScrollView(
             child: Column(
@@ -122,7 +122,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           CustomFont(
                             text: widget.userName,
                             fontSize: ScreenUtil().setSp(20),
-                            color: Colors.black,
+                            color: FB_TEXT_PRIMARY,
                             fontWeight: FontWeight.bold,
                           ),
                           Row(
@@ -158,7 +158,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   child: CustomFont(
                     text: widget.postContent,
                     fontSize: ScreenUtil().setSp(18),
-                    color: Colors.black,
+                    color: FB_TEXT_PRIMARY,
                   ),
                 ),
                 SizedBox(height: ScreenUtil().setHeight(30)),
@@ -190,7 +190,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       TextButton.icon(
                         onPressed: () {},
-                        icon: const Icon(Icons.comment, color: FB_DARK_PRIMARY),
+                        icon: Icon(Icons.comment, color: FB_DARK_PRIMARY),
                         label: CustomFont(
                           text: 'Comment',
                           fontSize: ScreenUtil().setSp(12),
@@ -199,7 +199,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       TextButton.icon(
                         onPressed: () {},
-                        icon: const Icon(Icons.redo, color: FB_DARK_PRIMARY),
+                        icon: Icon(Icons.redo, color: FB_DARK_PRIMARY),
                         label: CustomFont(
                           text: 'Share',
                           fontSize: ScreenUtil().setSp(12),
