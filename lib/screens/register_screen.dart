@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tuazon_mobprog/constants.dart';
-import 'package:tuazon_mobprog/widgets/custom_font.dart';
 import 'package:tuazon_mobprog/widgets/custom_inkwell_button.dart';
 import 'package:tuazon_mobprog/widgets/custom_textformfield.dart';
 import 'package:tuazon_mobprog/widgets/custom_dialogs.dart';
-import 'package:tuazon_mobprog/services/user_database.dart';
+import 'package:tuazon_mobprog/services/user_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -21,253 +20,113 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmpasswordController = TextEditingController();
-  final UserDatabase _userDatabase = UserDatabase();
+  final UserService _userService = UserService();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  bool _isLoading = false;
 
-  // Validate first name
-  String? _validateFirstName(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      customDialog(
-        context,
-        title: 'Invalid First Name',
-        content: 'Please enter your first name.',
-      );
-      return 'First name is required';
-    }
-    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value.trim())) {
-      customDialog(
-        context,
-        title: 'Invalid First Name',
-        content: 'First name should only contain letters.',
-      );
-      return 'First name should only contain letters';
-    }
-    if (value.trim().length < 2) {
-      customDialog(
-        context,
-        title: 'Invalid First Name',
-        content: 'First name must be at least 2 characters long.',
-      );
-      return 'First name must be at least 2 characters';
-    }
-    return null;
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    mobilenumController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+    confirmpasswordController.dispose();
+    super.dispose();
   }
 
-  // Validate last name
-  String? _validateLastName(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      customDialog(
-        context,
-        title: 'Invalid Last Name',
-        content: 'Please enter your last name.',
-      );
-      return 'Last name is required';
-    }
-    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value.trim())) {
-      customDialog(
-        context,
-        title: 'Invalid Last Name',
-        content: 'Last name should only contain letters.',
-      );
-      return 'Last name should only contain letters';
-    }
-    if (value.trim().length < 2) {
-      customDialog(
-        context,
-        title: 'Invalid Last Name',
-        content: 'Last name must be at least 2 characters long.',
-      );
-      return 'Last name must be at least 2 characters';
-    }
-    return null;
-  }
+  bool _isFormValid() {
+    final firstName = firstNameController.text.trim();
+    final lastName = lastNameController.text.trim();
+    final mobile = mobilenumController.text.trim();
+    final username = usernameController.text.trim();
+    final password = passwordController.text;
+    final confirmPassword = confirmpasswordController.text;
 
-  // Validate mobile number
-  String? _validateMobileNumber(String? value) {
-    if (value == null || value.trim().isEmpty) {
+    if (firstName.isEmpty || !RegExp(r'^[a-zA-Z\s]+$').hasMatch(firstName)) {
       customDialog(
         context,
-        title: 'Invalid Mobile Number',
-        content: 'Please enter your mobile number.',
+        title: 'Invalid First Name',
+        content: 'Please enter a first name that only contains letters.',
       );
-      return 'Mobile number is required';
+      return false;
     }
-    final mobile = value.trim();
-    if (mobile.length != 11) {
+    if (lastName.isEmpty || !RegExp(r'^[a-zA-Z\s]+$').hasMatch(lastName)) {
       customDialog(
         context,
-        title: 'Invalid Mobile Number',
-        content: 'Mobile number must be exactly 11 digits.',
+        title: 'Invalid Last Name',
+        content: 'Please enter a last name that only contains letters.',
       );
-      return 'Mobile number must be 11 digits';
+      return false;
     }
     if (!RegExp(r'^09\d{9}$').hasMatch(mobile)) {
       customDialog(
         context,
         title: 'Invalid Mobile Number',
-        content: 'Mobile number must start with 09 and contain only numbers.',
+        content: 'Mobile number must be 11 digits and start with 09.',
       );
-      return 'Mobile number must start with 09';
+      return false;
     }
-    return null;
-  }
-
-  // Validate username
-  String? _validateUsername(String? value) {
-    if (value == null || value.trim().isEmpty) {
+    if (username.length < 3 || !RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(username)) {
       customDialog(
         context,
         title: 'Invalid Username',
-        content: 'Please enter a username.',
+        content:
+            'Username must be at least 3 characters and can only contain '
+            'letters, numbers and underscores.',
       );
-      return 'Username is required';
+      return false;
     }
-    final username = value.trim();
-    if (username.length < 3) {
-      customDialog(
-        context,
-        title: 'Invalid Username',
-        content: 'Username must be at least 3 characters long.',
-      );
-      return 'Username must be at least 3 characters';
-    }
-    if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(username)) {
-      customDialog(
-        context,
-        title: 'Invalid Username',
-        content: 'Username can only contain letters, numbers, and underscores.',
-      );
-      return 'Username contains invalid characters';
-    }
-    return null;
-  }
-
-  // Validate password
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      customDialog(
-        context,
-        title: 'Invalid Password',
-        content: 'Please enter a password.',
-      );
-      return 'Password is required';
-    }
-    if (value.length < 8) {
+    if (password.length < 8) {
       customDialog(
         context,
         title: 'Invalid Password',
         content: 'Password must be at least 8 characters long.',
       );
-      return 'Password must be at least 8 characters';
+      return false;
     }
-    if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      customDialog(
-        context,
-        title: 'Invalid Password',
-        content: 'Password must contain at least one uppercase letter.',
-      );
-      return 'Password must contain uppercase letter';
-    }
-    if (!RegExp(r'[a-z]').hasMatch(value)) {
-      customDialog(
-        context,
-        title: 'Invalid Password',
-        content: 'Password must contain at least one lowercase letter.',
-      );
-      return 'Password must contain lowercase letter';
-    }
-    if (!RegExp(r'[0-9]').hasMatch(value)) {
-      customDialog(
-        context,
-        title: 'Invalid Password',
-        content: 'Password must contain at least one number.',
-      );
-      return 'Password must contain a number';
-    }
-    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
-      customDialog(
-        context,
-        title: 'Invalid Password',
-        content: 'Password must contain at least one special character.',
-      );
-      return 'Password must contain a special character';
-    }
-    return null;
-  }
-
-  // Validate confirm password
-  String? _validateConfirmPassword(String? value) {
-    if (value == null || value.isEmpty) {
-      customDialog(
-        context,
-        title: 'Invalid Confirm Password',
-        content: 'Please confirm your password.',
-      );
-      return 'Please confirm your password';
-    }
-    if (value != passwordController.text) {
+    if (password != confirmPassword) {
       customDialog(
         context,
         title: 'Password Mismatch',
         content: 'Passwords do not match. Please try again.',
       );
-      return 'Passwords do not match';
+      return false;
     }
-    return null;
+    return true;
   }
 
   Future<void> register() async {
-    // Validate all fields
-    final firstNameError = _validateFirstName(firstNameController.text);
-    if (firstNameError != null) return;
+    if (!_isFormValid()) return;
 
-    final lastNameError = _validateLastName(lastNameController.text);
-    if (lastNameError != null) return;
+    setState(() => _isLoading = true);
 
-    final mobileError = _validateMobileNumber(mobilenumController.text);
-    if (mobileError != null) return;
-
-    final usernameError = _validateUsername(usernameController.text);
-    if (usernameError != null) return;
-
-    final passwordError = _validatePassword(passwordController.text);
-    if (passwordError != null) return;
-
-    final confirmPasswordError = _validateConfirmPassword(
-      confirmpasswordController.text,
-    );
-    if (confirmPasswordError != null) return;
-
-    // Save user to database
-    final errorMessage = await _userDatabase.saveUser(
+    final errorMessage = await _userService.register(
       firstName: firstNameController.text.trim(),
       lastName: lastNameController.text.trim(),
-      mobileNumber: mobilenumController.text.trim(),
+      phone: mobilenumController.text.trim(),
       username: usernameController.text.trim(),
       password: passwordController.text,
     );
 
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
     if (errorMessage == null) {
-      // Success - no error message
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registration successful! Please login.'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.pushReplacementNamed(context, '/login');
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Registration successful! Please login.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.pushReplacementNamed(context, '/login');
     } else {
-      // Show the specific error message using custom dialog
-      if (mounted) {
-        customDialog(
-          context,
-          title: 'Registration Failed',
-          content: errorMessage,
-        );
-      }
+      customDialog(
+        context,
+        title: 'Registration Failed',
+        content: errorMessage,
+      );
     }
   }
 
@@ -289,9 +148,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               SizedBox(height: ScreenUtil().setHeight(25)),
               Image.asset(
-                        'assets/images/chatbubble.png',
-                        height: ScreenUtil().setHeight(125),
-                      ),
+                'assets/images/chatbubble.png',
+                height: ScreenUtil().setHeight(155),
+              ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -379,14 +238,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
               ),
-              SizedBox(height: ScreenUtil().setHeight(10)),
-              Text(
-                '(Password should be at least 8 characters, a mixture of letter and numbers consisting of at least one special character with Uppercase and Lowercase letters.)',
-                style: TextStyle(
-                  color: FB_TEXT_COLOR_GREY,
-                  fontSize: ScreenUtil().setSp(10),
-                ),
-              ),
+
               SizedBox(height: ScreenUtil().setHeight(10)),
               CustomTextFormField(
                 isObscure: _obscureConfirmPassword,
@@ -438,14 +290,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ],
               ),
               SizedBox(height: ScreenUtil().setHeight(10)),
-              CustomInkwellButton(
-                onTap: () async => await register(),
-                height: ScreenUtil().setHeight(45),
-                width: ScreenUtil().screenWidth,
-                fontSize: ScreenUtil().setSp(15),
-                fontWeight: FontWeight.bold,
-                buttonName: 'Submit',
-              ),
+              _isLoading
+                  ? SizedBox(
+                      height: ScreenUtil().setHeight(45),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: FB_LIGHT_PRIMARY,
+                        ),
+                      ),
+                    )
+                  : CustomInkwellButton(
+                      onTap: () async => await register(),
+                      height: ScreenUtil().setHeight(45),
+                      width: ScreenUtil().screenWidth,
+                      fontSize: ScreenUtil().setSp(15),
+                      fontWeight: FontWeight.bold,
+                      buttonName: 'Submit',
+                    ),
             ],
           ),
         ),

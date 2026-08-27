@@ -11,13 +11,14 @@ class CustomButton extends StatefulWidget {
   Color? fontColor, outlineColor;
   late dynamic onPressed;
 
-  CustomButton(
-    {super.key,
+  CustomButton({
+    super.key,
     this.buttonType = 'elevated',
     required this.buttonName,
     this.fontColor,
     required this.onPressed,
-    this.outlineColor});
+    this.outlineColor,
+  });
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
@@ -30,27 +31,28 @@ class _CustomButtonState extends State<CustomButton> {
     final Color fontColor = widget.fontColor ?? FB_TEXT_PRIMARY;
     final Color outlineColor = widget.outlineColor ?? FB_TEXT_PRIMARY;
     widget.buttonType == widget.buttonType.toLowerCase();
-    if (widget.buttonType == 'outlined'){
+    if (widget.buttonType == 'outlined') {
       return OutlinedButton(
         onPressed: widget.onPressed,
         style: OutlinedButton.styleFrom(
           padding: EdgeInsets.symmetric(
-            horizontal: ScreenUtil().setWidth(30),  
+            horizontal: ScreenUtil().setWidth(30),
             vertical: ScreenUtil().setHeight(10),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
           side: BorderSide(color: outlineColor),
-        ), 
+        ),
         child: CustomFont(
-          text: widget.buttonName, 
-          fontSize: ScreenUtil().setSp(12), 
-          color: fontColor),
-          );
-    }else if (widget.buttonType == 'text'){
+          text: widget.buttonName,
+          fontSize: ScreenUtil().setSp(12),
+          color: fontColor,
+        ),
+      );
+    } else if (widget.buttonType == 'text') {
       return TextButton(
-        onPressed: widget.onPressed, 
+        onPressed: widget.onPressed,
         style: TextButton.styleFrom(
           padding: EdgeInsets.symmetric(
             horizontal: ScreenUtil().setWidth(30),
@@ -59,13 +61,14 @@ class _CustomButtonState extends State<CustomButton> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-        ), 
+        ),
         child: CustomFont(
-          text: widget.buttonName, 
-          fontSize: ScreenUtil().setSp(12), 
-          color: fontColor),
-          );
-    }else {
+          text: widget.buttonName,
+          fontSize: ScreenUtil().setSp(12),
+          color: fontColor,
+        ),
+      );
+    } else {
       return ElevatedButton(
         onPressed: widget.onPressed,
         style: ElevatedButton.styleFrom(
@@ -76,11 +79,13 @@ class _CustomButtonState extends State<CustomButton> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-        ), child: CustomFont(
-          text: widget.buttonName, 
-          fontSize: ScreenUtil().setSp(12), 
-          color: fontColor),
-          );
+        ),
+        child: CustomFont(
+          text: widget.buttonName,
+          fontSize: ScreenUtil().setSp(12),
+          color: fontColor,
+        ),
+      );
     }
   }
 }

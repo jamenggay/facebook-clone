@@ -14,8 +14,8 @@ class CustomInkwellButton extends StatelessWidget {
   Color bgColor;
   Color fontColor;
 
-  CustomInkwellButton(
-    {super.key,
+  CustomInkwellButton({
+    super.key,
     required this.onTap,
     required this.height,
     required this.width,
@@ -25,8 +25,7 @@ class CustomInkwellButton extends StatelessWidget {
     this.fontSize = 1,
     this.icon = const Icon(null),
     this.fontWeight = FontWeight.normal,
-    }
-  );
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +40,16 @@ class CustomInkwellButton extends StatelessWidget {
           height: height,
           width: width,
           decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(10))
+            borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           child: Center(
             child: buttonName == ''
-              ? icon
-              : CustomFont(
-                text: buttonName, fontSize: fontSize, color: fontColor
-              ),
+                ? icon
+                : CustomFont(
+                    text: buttonName,
+                    fontSize: fontSize,
+                    color: fontColor,
+                  ),
           ),
         ),
       ),

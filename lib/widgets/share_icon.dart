@@ -21,13 +21,7 @@ class ShareButton extends StatelessWidget {
         width: iconSize,
         height: iconSize,
       ),
-      label: Text(
-        'Share',
-        style: TextStyle(
-          color: textColor,
-          fontSize: 12,
-        ),
-      ),
+      label: Text('Share', style: TextStyle(color: textColor, fontSize: 12)),
     );
   }
 }

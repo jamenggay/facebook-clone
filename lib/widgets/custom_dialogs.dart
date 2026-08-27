@@ -8,7 +8,9 @@ void customDialog(BuildContext context, {required title, required content}) {
     actions: <Widget>[
       ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: FB_DARK_PRIMARY, foregroundColor: Colors.white),
+          backgroundColor: FB_DARK_PRIMARY,
+          foregroundColor: Colors.white,
+        ),
         onPressed: () {
           Navigator.of(context).pop();
         },

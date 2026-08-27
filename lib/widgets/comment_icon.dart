@@ -21,13 +21,7 @@ class CommentButton extends StatelessWidget {
         width: iconSize,
         height: iconSize,
       ),
-      label: Text(
-        'Comment',
-        style: TextStyle(
-          color: textColor,
-          fontSize: 12,
-        ),
-      ),
+      label: Text('Comment', style: TextStyle(color: textColor, fontSize: 12)),
     );
   }
 }

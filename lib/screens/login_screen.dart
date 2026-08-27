@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../widgets/custom_inkwell_button.dart';
 import '../widgets/custom_dialogs.dart';
-import '../services/user_database.dart';
+import '../services/user_service.dart';
+import '../services/shared_preference.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,29 +18,10 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final UserDatabase _userDatabase = UserDatabase();
-  String? _errorMessage;
+  final UserService _userService = UserService();
+  final SessionService _session = SessionService();
   bool _obscurePassword = true;
-
-  @override
-  void initState() {
-    super.initState();
-    // Clear error message when user types
-    usernameController.addListener(() {
-      if (_errorMessage != null) {
-        setState(() {
-          _errorMessage = null;
-        });
-      }
-    });
-    passwordController.addListener(() {
-      if (_errorMessage != null) {
-        setState(() {
-          _errorMessage = null;
-        });
-      }
-    });
-  }
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -48,99 +30,66 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // Validate username
-  String? _validateUsername(String? value) {
-    if (value == null || value.trim().isEmpty) {
+  Future<void> login() async {
+    final username = usernameController.text.trim();
+    final password = passwordController.text;
+
+    if (username.isEmpty) {
       customDialog(
         context,
         title: 'Invalid Username',
         content: 'Please enter your username.',
       );
-      return 'Username is required';
+      return;
     }
-    final username = value.trim();
-    if (username.length < 3) {
-      customDialog(
-        context,
-        title: 'Invalid Username',
-        content: 'Username must be at least 3 characters long.',
-      );
-      return 'Username must be at least 3 characters';
-    }
-    return null;
-  }
-
-  // Validate password
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
+    if (password.isEmpty) {
       customDialog(
         context,
         title: 'Invalid Password',
         content: 'Please enter your password.',
       );
-      return 'Password is required';
+      return;
     }
-    if (value.length < 6) {
-      customDialog(
-        context,
-        title: 'Invalid Password',
-        content: 'Password must be at least 6 characters long.',
-      );
-      return 'Password must be at least 6 characters';
-    }
-    return null;
-  }
 
-  Future<void> login() async {
-    // Clear previous error message
-    setState(() {
-      _errorMessage = null;
-    });
-
-    // Validate username
-    final usernameError = _validateUsername(usernameController.text);
-    if (usernameError != null) return;
-
-    // Validate password
-    final passwordError = _validatePassword(passwordController.text);
-    if (passwordError != null) return;
+    setState(() => _isLoading = true);
 
     try {
-      final username = usernameController.text.trim();
-      final password = passwordController.text;
+      final loggedInUser = await _userService.login(username, password);
 
-      // Validate credentials from database
-      final isValid = await _userDatabase.validateCredentials(
-        username: username,
-        password: password,
-      );
-
-      if (!mounted) return;
-
-      if (isValid) {
-        // Store the logged-in username in database file
-        await _userDatabase.setCurrentUser(username);
-
-        // Credentials are correct, navigate to home screen (which contains newsfeed)
-        Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        // Show error dialog for invalid credentials
+      if (loggedInUser == null) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
         customDialog(
           context,
           title: 'Login Failed',
           content:
-              'Invalid username or password. Please check your credentials and try again.',
+              'Invalid username or password. Please check your credentials '
+              'and try again.',
         );
+        return;
       }
+
+      final fullProfile = await _userService.getUserById(loggedInUser.id);
+
+      await _session.saveUser(
+        fullProfile == null
+            ? loggedInUser
+            : fullProfile.withToken(loggedInUser.token),
+      );
+
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
-      // Handle any errors during validation
-      if (mounted) {
-        customDialog(
-          context,
-          title: 'Login Error',
-          content: 'An error occurred while logging in: ${e.toString()}',
-        );
-      }
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      customDialog(
+        context,
+        title: 'Connection Error',
+        content:
+            'Could not reach the server. Please check your internet '
+            'connection and try again.',
+      );
     }
   }
 
@@ -225,47 +174,24 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                       ),
-                      if (_errorMessage != null) ...[
-                        SizedBox(height: ScreenUtil().setHeight(15)),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil().setWidth(15),
-                            vertical: ScreenUtil().setHeight(10),
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.red.shade50,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.red.shade300),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.error_outline,
-                                color: Colors.red,
-                                size: ScreenUtil().setSp(20),
-                              ),
-                              SizedBox(width: ScreenUtil().setWidth(10)),
-                              Expanded(
-                                child: Text(
-                                  _errorMessage!,
-                                  style: TextStyle(
-                                    color: Colors.red.shade700,
-                                    fontSize: ScreenUtil().setSp(14),
-                                  ),
+                      SizedBox(height: ScreenUtil().setHeight(10)),
+                      SizedBox(height: ScreenUtil().setHeight(40)),
+                      _isLoading
+                          ? SizedBox(
+                              height: ScreenUtil().setHeight(40),
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: FB_LIGHT_PRIMARY,
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ],
-                      SizedBox(height: ScreenUtil().setHeight(50)),
-                      CustomInkwellButton(
-                        onTap: () async => await login(),
-                        height: ScreenUtil().setHeight(40),
-                        width: ScreenUtil().screenWidth,
-                        buttonName: 'Login',
-                        fontSize: ScreenUtil().setSp(15),
-                      ),
+                            )
+                          : CustomInkwellButton(
+                              onTap: () async => await login(),
+                              height: ScreenUtil().setHeight(40),
+                              width: ScreenUtil().screenWidth,
+                              buttonName: 'Login',
+                              fontSize: ScreenUtil().setSp(15),
+                            ),
                     ],
                   ),
                 ),

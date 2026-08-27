@@ -4,6 +4,7 @@ import 'package:tuazon_mobprog/widgets/custom_inkwell_button.dart';
 import 'package:tuazon_mobprog/widgets/like_icon.dart';
 import 'package:tuazon_mobprog/widgets/share_icon.dart';
 import 'package:tuazon_mobprog/widgets/comment_icon.dart';
+import 'package:tuazon_mobprog/services/comment_service.dart';
 import '../constants.dart';
 import 'package:tuazon_mobprog/screens/detail_screen.dart';
 import 'custom_font.dart';
@@ -21,6 +22,12 @@ class PostCard extends StatefulWidget {
   final bool showPlaceholder;
   final String adsMarket;
 
+  final int postId;
+
+  final String postTitle;
+
+  final String currentUserImage;
+
   const PostCard({
     super.key,
     required this.userName,
@@ -33,6 +40,9 @@ class PostCard extends StatefulWidget {
     this.imagePath,
     this.showPlaceholder = false,
     this.adsMarket = '',
+    this.postId = 0,
+    this.postTitle = '',
+    this.currentUserImage = 'assets/images/userprofile.jpg',
   });
 
   @override
@@ -40,13 +50,29 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
+  final CommentService _commentService = CommentService();
   late int _likes;
+  late int _comments;
   bool _isLiked = false;
 
   @override
   void initState() {
     super.initState();
     _likes = int.tryParse(widget.likesCount) ?? 0;
+    _comments = widget.commentsCount;
+
+    if (widget.postId > 0) _loadCommentCount();
+  }
+
+  Future<void> _loadCommentCount() async {
+    try {
+      final comments = await _commentService.getCommentsByPostId(widget.postId);
+      if (!mounted) return;
+      setState(() => _comments = comments.length);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _comments = widget.commentsCount);
+    }
   }
 
   String formatDate(DateTime d) {
@@ -72,11 +98,38 @@ class _PostCardState extends State<PostCard> {
     return '${months[d.month]} ${d.day}';
   }
 
+  Future<void> _openDetail() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailScreen(
+          postId: widget.postId,
+          postTitle: widget.postTitle,
+          userName: widget.userName,
+          postContent: widget.postContent,
+          date: formatDate(widget.date),
+          numOfLikes: _likes,
+          isLiked: _isLiked,
+          imageUrl: widget.imagePath ?? '',
+          profileImageUrl: widget.userImage,
+          currentUserImage: widget.currentUserImage,
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+    if (result != null && result is Map) {
+      setState(() {
+        if (result['likes'] != null) _likes = result['likes'] as int;
+        if (result['isLiked'] != null) _isLiked = result['isLiked'] as bool;
+        if (result['comments'] != null) _comments = result['comments'] as int;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget buildPostImage() {
-      // Constrain ad/market posts so the CTA row ("MORE DETAILS" + button)
-      // never gets clipped/overlaps in fixed-height containers (e.g. CarouselSlider).
       final bool isAdsMarket = widget.adsMarket.isNotEmpty;
       final double adsImageHeight = 160.h;
 
@@ -155,28 +208,7 @@ class _PostCardState extends State<PostCard> {
     }
 
     return InkWell(
-      onTap: () async {
-        final result = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailScreen(
-              userName: widget.userName,
-              postContent: widget.postContent,
-              date: formatDate(widget.date),
-              numOfLikes: _likes,
-              imageUrl: widget.imagePath ?? '',
-              profileImageUrl: widget.userImage,
-            ),
-          ),
-        );
-
-        if (result != null && result is Map && result['likes'] != null) {
-          setState(() {
-            _likes = result['likes'] as int;
-            if (result['isLiked'] != null) _isLiked = result['isLiked'] as bool;
-          });
-        }
-      },
+      onTap: _openDetail,
       child: Card(
         color: FB_CARD,
         margin: EdgeInsets.all(ScreenUtil().setSp(10)),
@@ -228,7 +260,19 @@ class _PostCardState extends State<PostCard> {
                 ],
               ),
               SizedBox(height: ScreenUtil().setHeight(5)),
-              //post content
+              (widget.postTitle == '')
+                  ? const SizedBox()
+                  : Padding(
+                      padding: EdgeInsets.only(
+                        bottom: ScreenUtil().setHeight(3),
+                      ),
+                      child: CustomFont(
+                        text: widget.postTitle,
+                        fontSize: ScreenUtil().setSp(14),
+                        color: FB_DARK_PRIMARY,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
               CustomFont(
                 text: widget.postContent,
                 fontSize: ScreenUtil().setSp(12),
@@ -237,7 +281,6 @@ class _PostCardState extends State<PostCard> {
               SizedBox(height: ScreenUtil().setHeight(5)),
               buildPostImage(),
 
-              // counts row (hide for ads/market posts)
               (widget.adsMarket != '')
                   ? const SizedBox()
                   : Column(
@@ -254,7 +297,7 @@ class _PostCardState extends State<PostCard> {
                             ),
                             Spacer(),
                             Text(
-                              '${widget.commentsCount} comments',
+                              '$_comments comments',
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 12,
@@ -293,16 +336,20 @@ class _PostCardState extends State<PostCard> {
                           textColor: _isLiked
                               ? FB_DARK_PRIMARY
                               : FB_TEXT_COLOR_GREY,
+                          isLiked: _isLiked,
                         ),
                         CommentButton(
-                          onPressed: () {
-                            print('Comment Tapped!');
-                          },
+                          onPressed: _openDetail,
                           textColor: FB_TEXT_COLOR_GREY,
                         ),
                         ShareButton(
                           onPressed: () {
-                            print('Shared Tapped!');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Post shared!'),
+                                duration: Duration(seconds: 1),
+                              ),
+                            );
                           },
                           textColor: FB_TEXT_COLOR_GREY,
                         ),
@@ -314,31 +361,39 @@ class _PostCardState extends State<PostCard> {
                       children: [
                         CircleAvatar(
                           radius: 14,
-                          backgroundImage: AssetImage(
-                            'assets/images/userprofile.jpg',
-                          ),
+                          backgroundImage:
+                              widget.currentUserImage.startsWith('http')
+                              ? CachedNetworkImageProvider(
+                                  widget.currentUserImage,
+                                )
+                              : AssetImage(widget.currentUserImage)
+                                    as ImageProvider,
                         ),
                         SizedBox(width: ScreenUtil().setWidth(10)),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(
-                            ScreenUtil().setSp(10),
-                            0,
-                            0,
-                            0,
-                          ),
-                          alignment: Alignment.centerLeft,
-                          height: ScreenUtil().setHeight(25),
-                          width: ScreenUtil().setWidth(330),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(ScreenUtil().setSp(10)),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: _openDetail,
+                            child: Container(
+                              padding: EdgeInsets.fromLTRB(
+                                ScreenUtil().setSp(10),
+                                0,
+                                0,
+                                0,
+                              ),
+                              alignment: Alignment.centerLeft,
+                              height: ScreenUtil().setHeight(25),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(ScreenUtil().setSp(10)),
+                                ),
+                              ),
+                              child: CustomFont(
+                                text: 'Write a comment...',
+                                fontSize: ScreenUtil().setSp(11),
+                                color: Colors.grey,
+                              ),
                             ),
-                          ),
-                          child: CustomFont(
-                            text: 'Write a comment...',
-                            fontSize: ScreenUtil().setSp(11),
-                            color: Colors.grey,
                           ),
                         ),
                       ],
@@ -372,19 +427,7 @@ class _PostCardState extends State<PostCard> {
                               Icons.arrow_forward,
                               color: Colors.white,
                             ),
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DetailScreen(
-                                  userName: widget.userName,
-                                  postContent: widget.postContent,
-                                  date: formatDate(widget.date),
-                                  numOfLikes: _likes,
-                                  imageUrl: widget.imagePath ?? '',
-                                  profileImageUrl: widget.userImage,
-                                ),
-                              ),
-                            ),
+                            onTap: _openDetail,
                           ),
                         ],
                       ),
@@ -395,11 +438,14 @@ class _PostCardState extends State<PostCard> {
                   : SizedBox(height: ScreenUtil().setHeight(10)),
               (widget.adsMarket != '')
                   ? const SizedBox()
-                  : CustomFont(
-                      text: 'View comments',
-                      fontSize: ScreenUtil().setSp(11),
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+                  : GestureDetector(
+                      onTap: _openDetail,
+                      child: CustomFont(
+                        text: 'View comments',
+                        fontSize: ScreenUtil().setSp(11),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
                     ),
             ],
           ),

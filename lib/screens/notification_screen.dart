@@ -34,7 +34,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             date: '7h',
             profileImageUrl: 'assets/images/notif1.jpg',
             numOfLikes: 15,
-            post:'Cloudflare announced a new service recently',
+            post: 'Cloudflare announced a new service recently',
             imageUrl: 'assets/images/notifImage.jpg',
           ),
           Divider(),
@@ -44,16 +44,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
             date: '15h',
             profileImageUrl: 'assets/images/notif8.jpg',
             numOfLikes: 12,
-            post: 'Merry Christmas everyone!'
+            post: 'Merry Christmas everyone!',
           ),
           Divider(),
           notif.CustomInformation(
             name: 'BARKGAGI: ',
-            description: '"good mood si kuya guard sa gate 1 nagpapapasok naka civilian"',
+            description:
+                '"good mood si kuya guard sa gate 1 nagpapapasok naka civilian"',
             date: '11h',
             profileImageUrl: 'assets/images/notif9.jpg',
             numOfLikes: 71,
-            post: "good mood si kuya guard sa gate 1 nagpapapasok naka civilian",
+            post:
+                "good mood si kuya guard sa gate 1 nagpapapasok naka civilian",
           ),
           Divider(),
           notif.CustomInformation(
@@ -62,8 +64,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             date: '1d',
             profileImageUrl: 'assets/images/notif2.jpg',
             numOfLikes: 7,
-            post: "Tara genshin!"
-
+            post: "Tara genshin!",
           ),
           Divider(),
           notif.CustomInformation(
@@ -80,9 +81,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
             description: " reacted to your post.",
             date: '1d',
             notifProfile: 'assets/images/notif4.jpg',
-            profileImageUrl: 'assets/images/userprofile.jpg' ,
+            profileImageUrl: 'assets/images/userprofile.jpg',
             numOfLikes: 12,
-            post: "BRING BACK MILEVEN. I BELIEVE. lmao"
+            post: "BRING BACK MILEVEN. I BELIEVE. lmao",
           ),
           Divider(),
           notif.CustomInformation(
@@ -112,7 +113,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
             numOfLikes: 21,
           ),
           Divider(),
-          
         ],
       ),
     );

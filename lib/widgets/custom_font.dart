@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class CustomFont extends StatelessWidget{
-  const CustomFont(
-    {super.key,
+class CustomFont extends StatelessWidget {
+  const CustomFont({
+    super.key,
     required this.text,
     required this.fontSize,
     required this.color,
@@ -13,8 +13,8 @@ class CustomFont extends StatelessWidget{
     this.fontStyle = FontStyle.normal,
     this.maxLines,
     this.overflow,
-    });
-  
+  });
+
   final String text;
   final double fontSize, letterSpacing;
   final Color color;
@@ -36,8 +36,9 @@ class CustomFont extends StatelessWidget{
         fontSize: fontSize,
         color: color,
         fontWeight: fontWeight,
-        fontStyle:  fontStyle,
-        letterSpacing: letterSpacing),
-        );
+        fontStyle: fontStyle,
+        letterSpacing: letterSpacing,
+      ),
+    );
   }
 }
